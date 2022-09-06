@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faPen } from "@fortawesome/free-solid-svg-icons";
 import React, { useState } from "react";
 import "./todo.css";
-import { useDispatch, useSelector } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import {
   addTaskToStore,
   completeTaskToStore,
@@ -10,7 +10,9 @@ import {
   editTaskToStore,
 } from "../../redux/todo/todoActions";
 
-function Todo() {
+// this component is using both ways. using hooks for redux and also using map methods. 
+function Todo(props) {
+  console.log("todo props: ", props);
   const [taskInput, setTaskInput] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [editingTask, setEditingTask] = useState({});
@@ -28,7 +30,8 @@ function Todo() {
       desc: taskInput,
       status: "Pending",
     };
-    dispatch(addTaskToStore(taskToAdd));
+    // dispatch(addTaskToStore(taskToAdd));
+    props.addTask(taskToAdd);
     setTaskInput("");
   };
 
@@ -68,7 +71,8 @@ function Todo() {
     const newList = taskList.filter((task) => {
       return task.id !== id; // just don't take the task user chose for deleting
     });
-    dispatch(deleteTaskToStore(newList));
+    // dispatch(deleteTaskToStore(newList));
+    props.deleteTask(newList);
   };
 
   const handleCheckbox = (e, id) => {
@@ -146,4 +150,17 @@ function Todo() {
   );
 }
 
-export default Todo;
+const mapStateToProps = (state) => {
+  return {
+    taskList: state.taskList,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addTask: (task) => dispatch(addTaskToStore(task)),
+    deleteTask: (taskList) => dispatch(deleteTaskToStore(taskList)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Todo);
