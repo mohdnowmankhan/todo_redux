@@ -12,7 +12,6 @@ import {
 
 // this component is using both ways. using hooks for redux and also using map methods. 
 function Todo(props) {
-  console.log("todo props: ", props);
   const [taskInput, setTaskInput] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [editingTask, setEditingTask] = useState({});
@@ -57,7 +56,6 @@ function Todo(props) {
       return item.id === id;
     });
     const task = taskList[taskIndex];
-    console.log("task: ", task);
     setTaskInput(task.desc);
     setEditingTask(task);
   };
